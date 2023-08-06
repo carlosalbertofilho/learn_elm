@@ -106,6 +106,7 @@ Para adiciona uma página que é exibida quando um usuário visita a URL: `/sign
 elm-land add page:view /sign-in
 ```
 Aqui está o código gerado em: `/usr/Pages/Sing-in.elm`
+
 Acessível em http://localhost:1234/sign-in
 
 ### Rotas Aninhadas
@@ -131,5 +132,8 @@ elm-land add page:view /:user
 
 Podemos criar uma nova página que acompanhe o estado da nossa interface do usuário usando o comando:
 ```shell
-elm-land add page:sandbox /namePage
+elm-land add page:sandbox /Counter
 ```
+Aqui está o código gerado em: `src/Pages/Counter.elm`
+
+Acessível em http://localhost:1234/sign-in
