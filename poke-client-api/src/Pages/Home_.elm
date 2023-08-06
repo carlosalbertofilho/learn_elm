@@ -6,6 +6,7 @@ import Html exposing (Html)
 import Html.Attributes exposing (alt, class, src)
 import Http
 import Page exposing (Page)
+import Route.Path
 import View exposing (View)
 
 
@@ -97,7 +98,7 @@ view model =
             Api.Failure httpError ->
                 Html.div
                     [ class "has-text-centered p-6 " ]
-                    [ Html.text "Something went wrong" ]
+                    [ Html.text (Api.toUserFriendlyMessage httpError) ]
         ]
     }
 
@@ -124,19 +125,26 @@ viewPokemon index pokemon =
             "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/"
                 ++ String.fromInt pokedexNumber
                 ++ ".png"
+
+        pokemonDetailRoute : Route.Path.Path
+        pokemonDetailRoute =
+            Route.Path.Pokemon_Name_
+                { name = pokemon.name }
     in
     Html.div [ class "column is-4-desktop is-6-tablet" ]
-        [ Html.div [ class "card" ]
-            [ Html.div [ class "card-content" ]
-                [ Html.div [ class "media" ]
-                    [ Html.div [ class "media-left" ]
-                        [ Html.figure [ class "image is-64x64" ]
-                            [ Html.img [ src pokemonImageUrl, alt pokemon.name ] []
+        [ Html.a [ Route.Path.href pokemonDetailRoute ]
+            [ Html.div [ class "card" ]
+                [ Html.div [ class "card-content" ]
+                    [ Html.div [ class "media" ]
+                        [ Html.div [ class "media-left" ]
+                            [ Html.figure [ class "image is-64x64" ]
+                                [ Html.img [ src pokemonImageUrl, alt pokemon.name ] []
+                                ]
                             ]
-                        ]
-                    , Html.div [ class "media-content" ]
-                        [ Html.p [ class "title is-4" ] [ Html.text pokemon.name ]
-                        , Html.p [ class "subtitle is-6" ] [ Html.text ("No. " ++ String.fromInt pokedexNumber) ]
+                        , Html.div [ class "media-content" ]
+                            [ Html.p [ class "title is-4" ] [ Html.text pokemon.name ]
+                            , Html.p [ class "subtitle is-6" ] [ Html.text ("No. " ++ String.fromInt pokedexNumber) ]
+                            ]
                         ]
                     ]
                 ]
