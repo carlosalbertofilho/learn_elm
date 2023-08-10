@@ -1,10 +1,10 @@
-module Effect exposing
+port module Effect exposing
     ( Effect
     , none, batch
     , sendCmd, sendMsg
     , pushRoute, replaceRoute, loadExternalUrl
     , map, toCmd
-    , signIn, signOut
+    , clearUser, saveUser, signIn, signOut
     )
 
 {-|
@@ -20,6 +20,7 @@ module Effect exposing
 
 import Browser.Navigation
 import Dict exposing (Dict)
+import Json.Encode
 import Route exposing (Route)
 import Route.Path
 import Shared.Model
@@ -39,20 +40,7 @@ type Effect msg
     | LoadExternalUrl String
       -- SHARED
     | SendSharedMsg Shared.Msg.Msg
-
-
-
--- SHARED
-
-
-signIn : { token : String } -> Effect msg
-signIn options =
-    SendSharedMsg (Shared.Msg.SignIn options)
-
-
-signOut : Effect msg
-signOut =
-    SendSharedMsg Shared.Msg.SignOut
+    | SendToLocalStorage { key : String, value : Json.Encode.Value }
 
 
 
@@ -126,6 +114,63 @@ loadExternalUrl =
 
 
 
+-- SHARED
+
+
+signIn :
+    { token : String
+    , id : String
+    , name : String
+    , profileImageUrl : String
+    , email : String
+    }
+    -> Effect msg
+signIn user =
+    SendSharedMsg (Shared.Msg.SignIn user)
+
+
+signOut : Effect msg
+signOut =
+    SendSharedMsg Shared.Msg.SignOut
+
+
+
+-- LOCAL STORAGE
+
+
+port sendToLocalStorage :
+    { key : String
+    , value : Json.Encode.Value
+    }
+    -> Cmd msg
+
+
+saveUser :
+    Shared.Model.User
+    -> Effect msg
+saveUser user =
+    SendToLocalStorage
+        { key = "user"
+        , value =
+            Json.Encode.object
+                [ ( "token", Json.Encode.string user.token )
+                , ( "id", Json.Encode.string user.id )
+                , ( "name", Json.Encode.string user.name )
+                , ( "profileImageUrl", Json.Encode.string user.profileImageUrl )
+                , ( "email", Json.Encode.string user.email )
+                ]
+        }
+
+
+clearUser : Effect msg
+clearUser =
+    SendToLocalStorage
+        { key = "user"
+        , value = Json.Encode.null
+        }
+
+
+
 -- INTERNALS
 
 
@@ -155,6 +200,9 @@ map fn effect =
 
         SendSharedMsg sharedMsg ->
             SendSharedMsg sharedMsg
+
+        SendToLocalStorage value ->
+            SendToLocalStorage value
 
 
 {-| Elm Land depends on this function to perform your effects.
@@ -192,3 +240,6 @@ toCmd options effect =
         SendSharedMsg sharedMsg ->
             Task.succeed sharedMsg
                 |> Task.perform options.fromSharedMsg
+
+        SendToLocalStorage value ->
+            sendToLocalStorage value
