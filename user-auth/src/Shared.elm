@@ -86,6 +86,7 @@ update route msg model =
                     , query = Dict.empty
                     , hash = Nothing
                     }
+                , Effect.saveUser user
                 ]
             )
 

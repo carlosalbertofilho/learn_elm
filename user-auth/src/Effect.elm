@@ -146,7 +146,12 @@ port sendToLocalStorage :
 
 
 saveUser :
-    Shared.Model.User
+    { token : String
+    , id : String
+    , name : String
+    , profileImageUrl : String
+    , email : String
+    }
     -> Effect msg
 saveUser user =
     SendToLocalStorage
