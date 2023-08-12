@@ -4,7 +4,9 @@
       "development": { "debugger": true },
       "production": { "debugger": false }
     },
-    "env": [],
+    "env": [
+      "NODE_ENV"
+    ],
     "html": {
       "attributes": {
         "html": { "lang": "en" },

@@ -4,6 +4,7 @@ import './web-components/forest-demo.js'
 // The value returned here will be passed as flags
 // into your `Shared.elm` function. 
 export const flags = ({ env }) => {
+    console.log(env)
     return {
         message: "Hello from JS!"
     }
