@@ -5,7 +5,9 @@ A [Elm architecture](https://guide.elm-lang.org/architecture) é uma maneira fá
 
 ### Model
 Descreve a forma do estado do nosso aplicativo.
-Adicionamos um campo para rastrear um valor. Ex:
+Adicionamos um campo para rastrear um valor.
+Ex:
+
 ```elm
 type alias Model =
    { counter : Int
@@ -16,6 +18,7 @@ type alias Model =
 Define o **valor inicial** de cada campo criado no model.
 Com base no exemplo acima, queremos iniciar o valor de `counter`
 como 0 quando a página for carregada.
+
 ```elm
 init : Model
 init = 
@@ -24,6 +27,7 @@ init =
 ```
 ### Msg
 É um **tipo personalizado** que define como um usuário pode alterar o estado dos campos do arquivo. O Elm nos permite usar tipos personalizados para definir todas as maneiras pelas quais um estado pode ser alterado
+
 ```elm
 type Msg
    = UserClickedIncrement
